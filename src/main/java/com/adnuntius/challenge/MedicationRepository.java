@@ -10,20 +10,24 @@ import com.google.gson.JsonObject;
  *  Singleton class acts as persistent storage in local memory. As this only exists
  *  in local memory it will be lost between deployments and restarts.
  */
-class MedicineRepository {
-    private ArrayList<MedicineString> storage = new ArrayList<MedicineString>();
+class MedicationRepository {
+    // repository
+    private ArrayList<Medication> storage = new ArrayList<Medication>();
 
-    private MedicineRepository() {};
+    // private instantiator
+    private MedicationRepository() {};
 
-    public static MedicineRepository getDummy(){ return new MedicineRepository();}
+    // public testing instantiator to compare with instance
+    public static MedicationRepository getDummy(){ return new MedicationRepository();}
 
-    private static MedicineRepository instance = new MedicineRepository();
-
-    public static MedicineRepository getInstance() {
+    // singleton stuff
+    private static MedicationRepository instance = new MedicationRepository();
+    public static MedicationRepository getInstance() {
         return instance;
     }
 
-    public void commitMedicineString(MedicineString ms) {
+    // commit the medication to repo
+    public void commitMedication(Medication ms) {
         this.storage.add(ms);
     }
 
@@ -31,11 +35,15 @@ class MedicineRepository {
         return storage.size();
     }
 
-    private HashMap<String, Integer> totalDosagePerMedicine() {
+    /**
+     * 
+     * @return the accumulative dosage per medication
+     */
+    private HashMap<String, Integer> totalDosagePerMedication() {
         HashMap<String, Integer> dpm = new HashMap<String, Integer>();
         String id;
         Integer dose;
-        for (MedicineString ms : this.storage) {
+        for (Medication ms : this.storage) {
             id = ms.getId();
             dose = ms.getdosageCount();
             dpm.put(id, dpm.get(id) != null ? dpm.get(id) + dose : dose);
@@ -43,11 +51,15 @@ class MedicineRepository {
         return dpm;
     }
 
+    /**
+     * 
+     * @return accumulative dosage per bottle size
+     */
     private HashMap<String, Integer> totalDoseagePerBottleSize() {
         HashMap<String, Integer> dps = new HashMap<String, Integer>();
         String size;
         Integer dose;
-        for (MedicineString ms : this.storage) {
+        for (Medication ms : this.storage) {
             size = ms.getBottleSize();
             dose = ms.getdosageCount();
             dps.put(size, dps.get(size) != null ? dps.get(size) + dose : dose);
@@ -55,22 +67,41 @@ class MedicineRepository {
         return dps;
     }
 
-    private HashMap<String, Integer> totalAmountPerMedicine() {
+    /**
+     * 
+     * @return the amount of medications per medication
+     */
+    private HashMap<String, Integer> totalAmountPerMedication() {
         HashMap<String, Integer> apm = new HashMap<String, Integer>();
         String id;
-        for (MedicineString ms : this.storage) {
+        for (Medication ms : this.storage) {
             id = ms.getId();
             apm.put(id, apm.get(id) != null ? apm.get(id) + 1 : 1);
         }
         return apm;
     }
 
+    /**
+     *  helper function for nested stats json
+     * 
+     * @param statistic
+     * @return
+     */
     private String toStatisticGson(HashMap<String, Object> statistic) {
         Gson gson = new Gson();
         String jsonString = gson.toJson(statistic);
         return jsonString;
     }
 
+    /**
+     * 
+     * @return a json verison of the assement criteria
+     *   	- totalMedicationsStored
+	 * 	    - totalDosagesPerMedication
+	 * 		- numberMedicationPerSize
+	 *      - numberMedicationPerMedication
+     * 
+     */
     public String serialize() {
         if (this.storage.isEmpty()) {
             JsonObject json = new JsonObject();
@@ -81,9 +112,9 @@ class MedicineRepository {
 
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("totalMedicationsStored", this.numStored());
-        map.put("toalDosagesPerMedication", this.totalDosagePerMedicine());
+        map.put("totalDosagesPerMedication", this.totalDosagePerMedication());
         map.put("numberMedicationPerSize", this.totalDoseagePerBottleSize());
-        map.put("numberMedicationPerMedication", this.totalAmountPerMedicine());
+        map.put("numberMedicationPerMedication", this.totalAmountPerMedication());
         return toStatisticGson(map);
     }
 }

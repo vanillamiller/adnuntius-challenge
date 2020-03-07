@@ -11,39 +11,60 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-// import org.json.JSONObject;
+/**
+ *  Server
+ */
 @WebServlet(urlPatterns = { "/" })
-public class MedicineServlet extends HttpServlet {
+public class MedicationServlet extends HttpServlet {
 
-	public String generateGetSuccessResponse(List<MedicineString> msList) {
+	/**
+	 * 
+	 * @param msList list of medications that have been added to the repo in this request
+	 * @return
+	 */
+	public String generateGetSuccessResponse(List<Medication> msList) {
 		JsonArray msListSerialized = new JsonArray();
 
-		for (MedicineString ms : msList) {
+		for (Medication ms : msList) {
 			msListSerialized.add(ms.serialize());
 		}
 
 		System.out.println(msListSerialized);
 		JsonObject json = new JsonObject();
-		json.add("MedicationsSuccessfullyUploaded", msListSerialized);
+		json.add("medicationsSuccessfullyUploaded", msListSerialized);
 		return json.toString();
 	}
 
+	/**
+	 *  accepts no arguments and returns Json with fields:
+	 * 		- if no medications in repository: {message : there are currently no medications}
+	 * 		- else 
+	 * 			- totalMedicationsStored
+	 * 			- totalDosagesPerMedication
+	 * 			- numberMedicationPerSize
+	 *          - numberMedicationPerMedication
+	 */
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		MedicineRepository medicineRepository = MedicineRepository.getInstance();
-		response.getWriter().print(medicineRepository.serialize());
+		MedicationRepository medicationRepository = MedicationRepository.getInstance();
+		response.getWriter().print(medicationRepository.serialize());
 		response.getWriter().close();
 	}
 
+
+	/**
+	 *  facilitates both posting formats and returns an array containing the json representations of the
+	 * 	medicines uploaded
+	 */
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		try {
+			// read the request body json
 			StringBuffer jb = new StringBuffer();
 			String line = null;
 
@@ -54,40 +75,44 @@ public class MedicineServlet extends HttpServlet {
 
 			JsonObject postReqBody = JsonParser.parseString(jb.toString()).getAsJsonObject();
 
-			MedicineRepository medicineRepository = MedicineRepository.getInstance();
+			// get the repo singleton
+			MedicationRepository medicationRepository = MedicationRepository.getInstance();
 
+			// if there is not medication strng key, throw exception
 			if (postReqBody.get("medicationStrings") == null) {
 				throw new Exception("must have parameter 'medicationStrings' for valid post");
-
+			
+			// if the post request was made with format 2
 			} else if (postReqBody.get("medicationStrings").toString().matches("\\[.*\\]")) {
-				JsonArray rawMedicineArray = postReqBody.get("medicationStrings").getAsJsonArray();
-				ArrayList<MedicineString> msList = new ArrayList<MedicineString>();
+				JsonArray rawMedicationArray = postReqBody.get("medicationStrings").getAsJsonArray();
+				ArrayList<Medication> msList = MedicationFactory.create(rawMedicationArray);
 
-				for (JsonElement rms : rawMedicineArray) {
-					msList.add(new MedicineString(rms.getAsString()));
-				}
-
-				for (MedicineString ms : msList) {
-					medicineRepository.commitMedicineString(ms);
+				for (Medication ms : msList) {
+					medicationRepository.commitMedication(ms);
 				}
 
 				response.getWriter().print(generateGetSuccessResponse(msList));
 
+			// if the post schema matches format 1
 			} else {
-				String rawMedicineString = postReqBody.get("medicationStrings").getAsString();
-				System.out.println(rawMedicineString);
-				ArrayList<MedicineString> msList = MedicineStringFactory.create(rawMedicineString);
-				for (MedicineString ms : msList) {
-					medicineRepository.commitMedicineString(ms);
+				String rawMedication = postReqBody.get("medicationStrings").getAsString();
+				System.out.println(rawMedication);
+				ArrayList<Medication> msList = MedicationFactory.create(rawMedication);
+				for (Medication ms : msList) {
+					medicationRepository.commitMedication(ms);
 				}
 				response.getWriter().print(generateGetSuccessResponse(msList));
 			}
-
+		
+		// if at any point an exception was thrown (most likely MedicalStringFormatException) give 
+		// back error message and 403 statusCode
 		} catch (Exception e) {
 			response.setStatus(403);
 			JsonObject errJson = new JsonObject();
 			errJson.addProperty("message", e.getMessage());
 			response.getWriter().print(errJson.toString());
+		
+		// close the writer
 		} finally {
 			response.getWriter().close();
 
