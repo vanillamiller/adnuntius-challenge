@@ -14,7 +14,16 @@ gradlew appRun
 ```
 
 To interact with the endpoint:
-```bash
-user@machine:~$curl https://localhost:8080/adnuntius/
-> 
+```console
+user@machine:~$ curl https://localhost:8080/adnuntius/
+
+> {"message" : "there are no medications currently stored"}
+
+user@machine:~$ curl -d '{"medicationStrings":"186FASd73541_m_1058;186FASc73541_M_1058;18673cda541_S_0061;"}' -X POST http://localhost:8080/adnuntius/
+
+> {"medicationsSuccessfullyUploaded":[{"id":"186FASd73541","bottleSize":"M","dosageCount":1058},{"id":"186FASc73541","bottleSize":"M","dosageCount":1058},{"id":"18673cda541","bottleSize":"S","dosageCount":61}]}
+
+user@machine:~$ curl localhost:8080/adnuntius/
+
+> {"numberMedicationPerSize":{"S":61,"M":2116},"totalMedicationsStored":3,"numberMedicationPerMedication":{"186FASc73541":1,"186FASd73541":1,"18673cda541":1},"totalDosagesPerMedication":{"186FASc73541":1058,"186FASd73541":1058,"18673cda541":61}}
 ```
