@@ -9,7 +9,6 @@ user@machine:~$ gradle -v
 
 Then you can build and run the project running with the following
 ```console
-user@machine:~$ gradle wrapper --gradle-version <your gradle version>
 user@machine:~$ gradle build
 user@machine:~$ ./gradlew appRun
 ```
