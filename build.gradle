@@ -1,0 +1,28 @@
+plugins {
+    id 'war'  
+    id 'application'
+    id 'org.gretty' version '3.0.0'
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    providedCompile 'javax.servlet:javax.servlet-api:3.1.0' 
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:2.7.19'
+    implementation 'com.google.code.gson:gson:2.8.6'
+}
+
+ext {
+   javaMainClass = "com.adnuntius.challenge.App"
+}
+
+war {
+    enabled=true
+}
+
+application {
+    mainClassName = javaMainClass
+}
