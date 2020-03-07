@@ -20,13 +20,13 @@ This API accepts 2 formats:
 - semicolon delimited String format:
 
     - ```json  
-        { medicationStrings: "186FASc73541_M_105818673cda541_S_0061186FASc73541_M_1058;18673cda541_S_0061;" }
+        { "medicationStrings": "186FASc73541_M_105818673cda541_S_0061186FASc73541_M_1058;18673cda541_S_0061;" }
         ```
 
 - array of strings
 
     - ```json
-        { medicationStrings: [ "186FASc73541_M_1058" , "18673cda541_S_0061" ] }
+        { "medicationStrings": [ "186FASc73541_M_1058" , "18673cda541_S_0061" ] }
         ```
 ```console
 user@machine:~$ curl http://localhost:8080/medication-server/
