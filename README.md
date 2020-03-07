@@ -3,12 +3,12 @@
 ---
 This is a gradle project and as such you will need to download from here https://gradle.org/ if you have not already
 
-```bash
+```console
 user@machine:~$ gradle build
 ```
 
 Then you can build and run the project running with the following
-```
+```console
 user@machine:~$ gradle build
 user@machine:~$ ./gradlew appRun
 ```
