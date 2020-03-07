@@ -72,6 +72,7 @@ public class MedicationServlet extends HttpServlet {
 			while ((line = reader.readLine()) != null)
 				jb.append(line);
 
+			request.getReader().close();
 			JsonObject postReqBody = JsonParser.parseString(jb.toString()).getAsJsonObject();
 
 			// get the repo singleton
@@ -114,7 +115,7 @@ public class MedicationServlet extends HttpServlet {
 		// close the writer
 		} finally {
 			response.getWriter().close();
-
+			
 		}
 
 	}
