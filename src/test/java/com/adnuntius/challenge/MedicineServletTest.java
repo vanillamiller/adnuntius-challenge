@@ -5,34 +5,31 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.WriteListener;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+
 public class MedicineServletTest {
     @Mock
     private HttpServletRequest request;
     @Mock
     private HttpServletResponse response;
+    @Mock
+    private MedicineRepository mr;
 
     @Before
     public void setUp() throws Exception {
@@ -50,7 +47,6 @@ public class MedicineServletTest {
     public void doGetEmpty() throws Exception {
         final StringWriter stringWriter = new StringWriter();
         final PrintWriter printWriter = new PrintWriter(stringWriter);
-
         when(response.getWriter()).thenReturn(printWriter);
 
         new MedicineServlet().doGet(request, response);
@@ -63,12 +59,18 @@ public class MedicineServletTest {
     public void doGetNonEmpty() throws Exception {
         final StringWriter stringWriter = new StringWriter();
         final PrintWriter printWriter = new PrintWriter(stringWriter);
+        MedicineRepository mrTest = MedicineRepository.getDummy();
+        mrTest.commitMedicineString(new MedicineString("first_M_0001"));
+        mrTest.commitMedicineString(new MedicineString("second_M_0002"));
+        mrTest.commitMedicineString(new MedicineString("first_XL_1000"));
 
+        when(MedicineRepository.getInstance()).thenReturn(mrTest);
         when(response.getWriter()).thenReturn(printWriter);
 
+        
         new MedicineServlet().doGet(request, response);
 
-        assertEquals(generateEmptyMessage(), stringWriter.toString());
+        assertEquals(mrTest.serialize(), stringWriter.toString());
 
     }
 

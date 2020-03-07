@@ -13,8 +13,9 @@ import com.google.gson.JsonObject;
 class MedicineRepository {
     private ArrayList<MedicineString> storage = new ArrayList<MedicineString>();
 
-    private MedicineRepository() {
-    };
+    private MedicineRepository() {};
+
+    public static MedicineRepository getDummy(){ return new MedicineRepository();}
 
     private static MedicineRepository instance = new MedicineRepository();
 
