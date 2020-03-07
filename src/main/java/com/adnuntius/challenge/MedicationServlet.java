@@ -51,6 +51,8 @@ public class MedicationServlet extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		MedicationRepository medicationRepository = MedicationRepository.getInstance();
+		response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 		response.getWriter().print(medicationRepository.serialize());
 		response.getWriter().close();
 	}
@@ -90,7 +92,8 @@ public class MedicationServlet extends HttpServlet {
 				for (Medication ms : msList) {
 					medicationRepository.commitMedication(ms);
 				}
-
+				response.setContentType("application/json");
+        		response.setCharacterEncoding("UTF-8");
 				response.getWriter().print(generateGetSuccessResponse(msList));
 
 			// if the post schema matches format 1
@@ -101,6 +104,8 @@ public class MedicationServlet extends HttpServlet {
 				for (Medication ms : msList) {
 					medicationRepository.commitMedication(ms);
 				}
+				response.setContentType("application/json");
+        		response.setCharacterEncoding("UTF-8");
 				response.getWriter().print(generateGetSuccessResponse(msList));
 			}
 		
@@ -110,6 +115,8 @@ public class MedicationServlet extends HttpServlet {
 			response.setStatus(403);
 			JsonObject errJson = new JsonObject();
 			errJson.addProperty("message", e.getMessage());
+			response.setContentType("application/json");
+        	response.setCharacterEncoding("UTF-8");
 			response.getWriter().print(errJson.toString());
 		
 		// close the writer
