@@ -114,7 +114,11 @@ public class MedicationServlet extends HttpServlet {
 		} catch (Exception e) {
 			response.setStatus(403);
 			JsonObject errJson = new JsonObject();
-			errJson.addProperty("message", e.getMessage());
+			if(e instanceof MedicationFormatException) {
+				errJson.addProperty("message", e.getMessage());
+			} else {
+				errJson.addProperty("message", "something went wrong");
+			}
 			response.setContentType("application/json");
         	response.setCharacterEncoding("UTF-8");
 			response.getWriter().print(errJson.toString());
