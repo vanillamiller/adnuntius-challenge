@@ -54,7 +54,13 @@ user@machine:~$ curl localhost:8080/medication-server/
 several tests were written under src\test\java\com\adnuntius\challenge\MedicationServletTest.java using Mockito
 The results for these tests can be found in build\reports\tests\test\index.html
 They test:
-    - GET with empty repo
-    - POST with format1
-    - POST with format2
+- GET with empty repo
+- POST with format1
+- POST with format2
 These tests are verified before build is complete
+
+Alternatively they can be tested with:
+
+```console
+user@machine:~$ gradle test
+```
