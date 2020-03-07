@@ -34,7 +34,7 @@ public class Medication {
             throw new MedicationFormatException("not enough sections of your medical string");
         }
 
-        if (parts[0].length() < 20) {
+        if (parts[0].length() <= 20) {
             this.id = parts[0];
         } else {
             throw new MedicationFormatException("id does not match specifications");
