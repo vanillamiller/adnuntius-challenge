@@ -15,7 +15,7 @@ gradlew appRun
 
 To interact with the endpoint:
 ```console
-user@machine:~$ curl https://localhost:8080/adnuntius-challenge/
+user@machine:~$ curl http://localhost:8080/adnuntius-challenge/
 
 > {"message" : "there are no medications currently stored"}
 
