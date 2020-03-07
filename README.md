@@ -10,7 +10,7 @@ user@machine:~$ gradle -v
 Then you can build and run the project running with the following
 ```console
 user@machine:~$ gradle build
-user@machine:~$ gradlew appRun
+user@machine:~$ ./gradlew appRun
 ```
 
 To interact with the endpoint:
