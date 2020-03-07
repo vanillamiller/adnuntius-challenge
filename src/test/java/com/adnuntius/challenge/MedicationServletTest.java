@@ -54,25 +54,6 @@ public class MedicationServletTest {
         assertEquals(generateEmptyMessage(), stringWriter.toString());
     }
 
-    // @Test
-    // public void doGetNonEmpty() throws Exception {
-    //     final StringWriter stringWriter = new StringWriter();
-    //     final PrintWriter printWriter = new PrintWriter(stringWriter);
-    //     MedicationRepository mrTest = MedicationRepository.getDummy();
-    //     mrTest.commitMedication(new Medication("first_M_0001"));
-    //     mrTest.commitMedication(new Medication("second_M_0002"));
-    //     mrTest.commitMedication(new Medication("first_XL_1000"));
-
-    //     when(MedicationRepository.getInstance()).thenReturn(mrTest);
-    //     when(response.getWriter()).thenReturn(printWriter);
-
-        
-    //     new MedicationServlet().doGet(request, response);
-
-    //     assertEquals(mrTest.serialize(), stringWriter.toString());
-
-    // }
-
     @Test
     public void doPostCorrectFormat1() throws Exception {
         final StringWriter stringWriter = new StringWriter();

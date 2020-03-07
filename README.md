@@ -27,3 +27,11 @@ user@machine:~$ curl localhost:8080/adnuntius/
 
 > {"numberMedicationPerSize":{"S":61,"M":2116},"totalMedicationsStored":3,"numberMedicationPerMedication":{"186FASc73541":1,"186FASd73541":1,"18673cda541":1},"totalDosagesPerMedication":{"186FASc73541":1058,"186FASd73541":1058,"18673cda541":61}}
 ```
+
+## Testing 
+several tests were written under src/test/java/com/adnuntius/challenge/MedicationServletTest.java using Mockito
+They test:
+    - GET with empty repo
+    - POST with format1
+    - POST with format2
+These tests are verified before build is complete
