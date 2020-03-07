@@ -72,7 +72,7 @@ public class MedicationServlet extends HttpServlet {
 			while ((line = reader.readLine()) != null)
 				jb.append(line);
 
-			request.getReader().close();
+			reader.close();
 			JsonObject postReqBody = JsonParser.parseString(jb.toString()).getAsJsonObject();
 
 			// get the repo singleton
